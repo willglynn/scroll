@@ -127,7 +127,7 @@ pub trait Cwrite<Ctx: Copy, I = usize>: Index<I> + IndexMut<RangeFrom<I>> {
     /// assert_eq!(bytes.cread::<i64>(0), 42);
     /// assert_eq!(bytes.cread::<u32>(8), 0xdeadbeef);
     #[inline]
-    fn cwrite<N: IntoCtx<Ctx, <Self as Index<RangeFrom<I>>>::Output>>(&mut self, n: N, offset: I) where Ctx: Default {
+    fn cwrite<N: IntoCtx<Ctx, <Self as Index<RangeFrom<I>>>::Output>>(&mut self, n: &N, offset: I) where Ctx: Default {
         let ctx = Ctx::default();
         n.into_ctx(self.index_mut(offset..), ctx)
     }
@@ -143,7 +143,7 @@ pub trait Cwrite<Ctx: Copy, I = usize>: Index<I> + IndexMut<RangeFrom<I>> {
     /// assert_eq!(bytes.cread_with::<i64>(0, LE), 42);
     /// assert_eq!(bytes.cread_with::<u32>(8, LE), 0xefbeadde);
     #[inline]
-    fn cwrite_with<N: IntoCtx<Ctx, <Self as Index<RangeFrom<I>>>::Output>>(&mut self, n: N, offset: I, ctx: Ctx) {
+    fn cwrite_with<N: IntoCtx<Ctx, <Self as Index<RangeFrom<I>>>::Output>>(&mut self, n: &N, offset: I, ctx: Ctx) {
         n.into_ctx(self.index_mut(offset..), ctx)
     }
 }

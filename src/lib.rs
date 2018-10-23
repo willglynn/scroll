@@ -349,7 +349,7 @@ mod tests {
 
     impl super::ctx::TryIntoCtx<super::Endian> for Foo {
         type Error = ExternalError;
-        fn try_into_ctx(self, this: &mut [u8], le: super::Endian) -> Result<usize, Self::Error> {
+        fn try_into_ctx(&self, this: &mut [u8], le: super::Endian) -> Result<usize, Self::Error> {
             use super::Pwrite;
             if this.len() < 2 { return Err((ExternalError {}).into()) }
             this.pwrite_with(self.0, 0, le)?;

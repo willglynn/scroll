@@ -258,7 +258,7 @@ fn cwrite_api() {
 }
 
 impl scroll::ctx::IntoCtx<scroll::Endian> for Bar {
-    fn into_ctx(self, bytes: &mut [u8], ctx: scroll::Endian) {
+    fn into_ctx(&self, bytes: &mut [u8], ctx: scroll::Endian) {
         use scroll::Cwrite;
         bytes.cwrite_with(self.foo, 0, ctx);
         bytes.cwrite_with(self.bar, 4, ctx);

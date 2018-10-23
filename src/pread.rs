@@ -18,7 +18,7 @@ use error;
 ///
 /// impl<'a> ctx::TryFromCtx<'a, scroll::Endian> for Foo {
 ///      type Error = scroll::Error;
-///      fn try_from_ctx(this: &'a [u8], le: scroll::Endian) -> Result<(Self, usize), Self::Error> {
+///      fn try_from_ctx(this: &'a [u8], le: scroll::Endian) -> Result<(Self, Self::Size), Self::Error> {
 ///          if this.len() < 2 { return Err((scroll::Error::Custom("whatever".to_string())).into()) }
 ///          let n = this.pread_with(0, le)?;
 ///          Ok((Foo(n), 2))
@@ -102,7 +102,7 @@ pub trait Pread<Ctx, E> : Index<usize> + Index<RangeFrom<usize>> + MeasureWith<C
     /// let dead: u16 = bytes.pread_with(0, scroll::BE).unwrap();
     /// assert_eq!(dead, 0xdeadu16);
     fn pread_with<'a, N: TryFromCtx<'a, Ctx, <Self as Index<RangeFrom<usize>>>::Output, Error = E>>(&'a self, offset: usize, ctx: Ctx) -> result::Result<N, E> where <Self as Index<RangeFrom<usize>>>::Output: 'a {
-        let len = self.measure_with(&ctx);
+        let len = self.measure_with(ctx);
         if offset >= len {
             return Err(error::Error::BadOffset(offset).into())
         }
@@ -141,7 +141,7 @@ pub trait Pread<Ctx, E> : Index<usize> + Index<RangeFrom<usize>> + MeasureWith<C
         //     *offset += size;
         //     Ok(n)
         // })
-        let len = self.measure_with(&ctx);
+        let len = self.measure_with(ctx);
         if o >= len {
             return Err(error::Error::BadOffset(o).into())
         }
